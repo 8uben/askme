@@ -21,6 +21,9 @@ class User < ApplicationRecord
   # и поле подтверждения пароля
   validates_confirmation_of :password
 
+  validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}
+  validates :username, length: {maximum: 40}, format: {with: /\A\w+\z/}
+
   before_save :encrypt_password
 
   def encrypt_password
