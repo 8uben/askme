@@ -3,17 +3,20 @@ class User < ApplicationRecord
 
   ITERATIONS = 20_000
   DIGEST = OpenSSL::Digest::SHA256.new
+  USERNAME_REGEX = /\A\w+\z/
+  USERNAME_MAX_LENGTH = 40
+
   # Когда мы вызываем метод questions у экземпляра класса User, рельсы
   # поймут это как просьбу найти в базе все объекты класса Questions со
   # значением user_id равный user.id.
   has_many :questions
 
-  validates :email, :username, presence: true
-  validates :email, :username, uniqueness: true
-
   # Виртуальное поле, которое не сохраняется в базу. Из него перед сохранением читается пароль,
   # и сохраняется в базу уже зашифрованная версия пароля в
   attr_accessor :password
+
+  validates :email, :username, presence: true
+  validates :email, :username, uniqueness: true
 
   # валидация будет проходить только при создании нового юзера
   validates :password, presence: true, on: :create
@@ -22,31 +25,10 @@ class User < ApplicationRecord
   validates_confirmation_of :password
 
   validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}
-  validates :username, length: {maximum: 40}, format: {with: /\A\w+\z/}
+  validates :username, length: {maximum: USERNAME_MAX_LENGTH}, format: {with: USERNAME_REGEX}
 
+  before_validation :convert_to_downcase_username_and_email
   before_save :encrypt_password
-
-  def encrypt_password
-    if password.present?
-      # Создаем т.н. «соль» — случайная строка, усложняющая задачу хакерам по
-      # взлому пароля, даже если у них окажется наша БД.
-      #У каждого юзера своя «соль», это значит, что если подобрать перебором пароль
-      # одного юзера, нельзя разгадать, по какому принципу
-      # зашифрованы пароли остальных пользователей
-      self.password_salt = User.hash_to_string(OpenSSL::Random.random_bytes(16))
-
-      # Создаем хэш пароля — длинная уникальная строка, из которой невозможно
-      # восстановить исходный пароль. Однако, если правильный пароль у нас есть,
-      # мы легко можем получить такую же строку и сравнить её с той, что в базе.
-      self.password_hash = User.hash_to_string(
-        OpenSSL::PKCS5.pbkdf2_hmac(
-          password, password_salt, ITERATIONS, DIGEST.length, DIGEST
-        )
-      )
-
-      # Оба поля попадут в базу при сохранении (save).
-    end
-  end
 
   # Служебный метод, преобразующий бинарную строку в шестнадцатиричный формат,
   # для удобства хранения.
@@ -78,5 +60,34 @@ class User < ApplicationRecord
 
     # Иначе, возвращаем nil
     nil
+  end
+
+  private
+
+  def encrypt_password
+    if password.present?
+      # Создаем т.н. «соль» — случайная строка, усложняющая задачу хакерам по
+      # взлому пароля, даже если у них окажется наша БД.
+      #У каждого юзера своя «соль», это значит, что если подобрать перебором пароль
+      # одного юзера, нельзя разгадать, по какому принципу
+      # зашифрованы пароли остальных пользователей
+      self.password_salt = User.hash_to_string(OpenSSL::Random.random_bytes(16))
+
+      # Создаем хэш пароля — длинная уникальная строка, из которой невозможно
+      # восстановить исходный пароль. Однако, если правильный пароль у нас есть,
+      # мы легко можем получить такую же строку и сравнить её с той, что в базе.
+      self.password_hash = User.hash_to_string(
+        OpenSSL::PKCS5.pbkdf2_hmac(
+          password, password_salt, ITERATIONS, DIGEST.length, DIGEST
+        )
+      )
+
+      # Оба поля попадут в базу при сохранении (save).
+    end
+  end
+
+  def convert_to_downcase_username_and_email
+    username&.downcase!
+    email&.downcase!
   end
 end
