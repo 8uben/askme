@@ -17,7 +17,16 @@
   <div class="user-ask-button container text-center">
     <%= link_to "Спроси меня", '', class: 'button button-light', id: 'ask-button' %>
   </div>
+
+  <div class="text-lead">
+    <p><%= incline(@questions.size, 'вопрос', 'вопроса', 'вопросов') %></p>
+  </div>
+  <div class="text-small">
+    <p>С ответом: <%= @amount_answered_questions %></p>
+    <p>Без ответа: <%= @amount_unanswered_questions %></p>
+  </div>
 </div>
+
 <div class="user-question-form-div column-1-4 column-1-4-right" id='ask-form'>
   <div class="user-question-form buffer-both">
     <div class="form">
@@ -36,6 +45,7 @@
     </div>
   </div>
 </div>
+
 <div class="column-3-4">
   <div class="user-questions buffer-both">
     <div class="questions-list">
