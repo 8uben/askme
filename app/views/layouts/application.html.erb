@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Askme</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<head>
+  <meta charset="UTF-8"/>
+  <title>Хорошие вопросы</title>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_pack_tag 'application' %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
 
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%= javascript_pack_tag 'application' %>
-  </head>
+<div class="header">
+  <div class="container">
+    <div class="header-logo">
+      <%# Ссылка на главную страницу сайта (root_path) %>
+      <h1 class="header-title"><%= link_to "Хорошие вопросы", root_path %></h1>
+    </div>
+  </div>
+</div>
 
-  <body>
-    <%= yield %>
-  </body>
+<div class="content">
+  <%# Вместо волшебной конструкции yield рельсы подставят то, что срендерит %>
+  <%# шаблон для нужной нам страницы, например, users/show %>
+  <%= yield %>
+</div>
+
+</body>
 </html>
