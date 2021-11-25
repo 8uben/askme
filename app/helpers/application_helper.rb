@@ -8,4 +8,21 @@ module ApplicationHelper
       asset_path 'avatar.jpg'
     end
   end
+
+  def incline(count, one, several, many)
+    number_inclination = count % 10
+
+    form =
+      if (11..14).include?(count % 100)
+        many
+      elsif number_inclination == 1
+        one
+      elsif (2..4).include?(number_inclination)
+        several
+      else
+        many
+      end
+
+    "#{count} #{form}"
+  end
 end
