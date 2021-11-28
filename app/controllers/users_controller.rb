@@ -1,40 +1,68 @@
 class UsersController < ApplicationController
+  before_action :load_user, except: [:index, :create, :new]
+
+  # Проверяем, имеет ли юзер доступ к экшену, делаем это для всех действий, кроме
+  # :index, :new, :create, :show — к ним есть доступ у всех, даже у анонимных юзеров.
+  before_action :authorize_user, except: [:index, :new, :create, :show]
+
   def index
-    # Создаём массив из двух болванок пользователей.
-    # Вызываем метод User.new, который создает модель, не записывая её в базу.
-    # У каждого юзера мы прописали id, чтобы сымитировать реальную
-    # ситуацию – иначе не будет работать хелпер путей
-    @users = [
-      User.new(
-        id: 1,
-        name: 'Vadim',
-        username: 'installero',
-        avatar_url: 'https://secure.gravatar.com/avatar/71269686e0f757ddb4f73614f43ae445?s=100'
-      ),
-      User.new(id: 2, name: 'Misha', username: 'aristofun')
-    ]
+    @users = User.all
   end
 
   def new
+    # Если юзер залогинен, отправляем его на главную с сообщением
+    redirect_to root_url, alert: 'Вы уже залогинены' if current_user.present?
+
+    # Иначе, создаем болванку нового пользователя.
+    @user = User.new
   end
 
   def edit
   end
 
   def show
-    @user =
-      User.new(
-        name: 'Vadim',
-        username: 'installero',
-        avatar_url: 'https://secure.gravatar.com/avatar/71269686e0f757ddb4f73614f43ae445?s=100'
-      )
+    @questions = @user.questions.order(created_at: :desc)
 
-    @questions = [
-      Question.new(text: 'Как дела?', created_at: Date.parse('27.03.2016'), answer: 'Нормально'),
-      Question.new(text: 'Что делаешь?', created_at: Date.parse('26.11.2021'), answer: '49-1'),
-      Question.new(text: 'Что нового?', created_at: Date.parse('26.11.2021'))
-    ]
+    # Для формы нового вопроса создаём заготовку, вызывая build у результата вызова метода @user.questions.
+    @new_question = @user.questions.build
+  end
 
-    @new_question = Question.new
+  def create
+    redirect_to root_url, alert: 'Вы уже залогинены' if current_user.present?
+    @user = User.new(user_params)
+
+    if @user.save
+      redirect_to root_url, notice: 'Пользователь успешно зарегистрирован!'
+    else
+      render 'new'
+    end
+  end
+
+  def update
+    if @user.update(user_params)
+      redirect_to user_path(@user), notice: 'Данные обновлены'
+    else
+      render 'edit'
+    end
+  end
+
+  private
+
+  def user_params
+    # берём объект params, потребуем у него иметь ключ
+    # :user, у него с помощью метода permit разрешаем
+    # набор инпутов. Ничего лишнего, кроме них, в пользователя не попадёт
+    params.require(:user).permit(
+      :email, :password, :password_confirmation, :name, :username, :avatar_url
+    )
+  end
+
+  def load_user
+    # защищаем от повторной инициализации с помощью ||=
+    @user ||= User.find(params[:id])
+  end
+
+  def authorize_user
+    reject_user unless @user == current_user
   end
 end
