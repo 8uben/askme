@@ -5,6 +5,8 @@ class User < ApplicationRecord
   DIGEST = OpenSSL::Digest::SHA256.new
   USERNAME_REGEX = /\A\w+\z/
   USERNAME_MAX_LENGTH = 40
+  HEX_BACKGROUND_COLOR_REGEX = /\A#([\da-f]{3}){1,2}\z/
+  DEFAULT_BACKGROUND_COLOR = '#005a55'
 
   # Когда мы вызываем метод questions у экземпляра класса User, рельсы
   # поймут это как просьбу найти в базе все объекты класса Questions со
@@ -26,6 +28,7 @@ class User < ApplicationRecord
 
   validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}
   validates :username, length: {maximum: USERNAME_MAX_LENGTH}, format: {with: USERNAME_REGEX}
+  validates :background_color, format: {with: HEX_BACKGROUND_COLOR_REGEX}, on: :update
 
   before_validation :convert_to_downcase_username_and_email
   before_save :encrypt_password
@@ -60,6 +63,10 @@ class User < ApplicationRecord
 
     # Иначе, возвращаем nil
     nil
+  end
+
+  def bg_color
+    background_color || DEFAULT_BACKGROUND_COLOR
   end
 
   private
