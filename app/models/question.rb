@@ -6,6 +6,8 @@ class Question < ApplicationRecord
   # поймут это как просьбу найти в базе объект класса User со значением id,
   # который равен question.user_id.
   belongs_to :user
+  # рельсы добавят к нему `_id` и найдут нужное поле в таблице
+  belongs_to :author, class_name: 'User', optional: true
 
   # валидируем сразу и связь, теперь нельзя создать вопрос, у которого нет юзера
   validates :user, :text, presence: true
