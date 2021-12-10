@@ -51,6 +51,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    if @user.destroy
+      session[:user_id] = nil
+      redirect_to root_url, notice: 'Профиль удален!'
+    else
+      render 'edit'
+    end
+  end
+
   private
 
   def user_params
