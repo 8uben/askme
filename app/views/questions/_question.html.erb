@@ -1,5 +1,10 @@
 <div class="question">
   <div class="question-content">
+    <div class="text-small">
+      <% author = question.author %>
+      <%= author ? (link_to "@#{author.username}", author) : 'Анонимно' %>
+    </div>
+
     <div class="question-text text-lead">
       <%= question.text %>
     </div>

@@ -12,6 +12,7 @@ class User < ApplicationRecord
   # поймут это как просьбу найти в базе все объекты класса Questions со
   # значением user_id равный user.id.
   has_many :questions, dependent: :destroy
+  has_many :asked_questions, class_name: 'Question', foreign_key: :author_id, dependent: :nullify
 
   # Виртуальное поле, которое не сохраняется в базу. Из него перед сохранением читается пароль,
   # и сохраняется в базу уже зашифрованная версия пароля в
