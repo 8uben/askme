@@ -10,6 +10,10 @@
   padding: 10px 15px;
 }
 
+.question-content a:hover {
+  text-decoration: underline;
+}
+
 .question + .question {
   margin-top: 10px;
 }

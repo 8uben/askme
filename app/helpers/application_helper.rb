@@ -29,4 +29,12 @@ module ApplicationHelper
   def fa_icon(icon_class)
     content_tag 'span', '', class: "fa fa-#{icon_class}"
   end
+
+  def parse_hashtags(string)
+    sanitize(string.gsub(Hashtag::HASHTAG_REGEX) { |hashtag| hashtag_link(hashtag) })
+  end
+
+  def hashtag_link(hashtag)
+    link_to(hashtag, hashtag_path(hashtag: hashtag.downcase.delete('#')))
+  end
 end

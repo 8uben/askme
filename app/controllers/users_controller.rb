@@ -7,6 +7,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
+    @hashtags = Hashtag.joins(:questions).distinct
   end
 
   def new

@@ -1,13 +1,11 @@
 class QuestionsController < ApplicationController
-
-  before_action :set_question, only: %i[ edit update destroy ]
+  before_action :set_question
 
   # GET /questions/1/edit
   def edit
   end
 
   def create
-    @question = Question.new(question_params)
     @question.author = current_user
 
     if @question.save
@@ -37,7 +35,7 @@ class QuestionsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_question
-    @question = Question.find(params[:id])
+    @question = Question.find_by(id: params[:id]) || Question.new(question_params)
   end
 
   def question_params
