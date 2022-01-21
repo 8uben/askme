@@ -13,6 +13,8 @@ gem 'sass-rails', '>= 6'
 gem 'webpacker', '~> 5.0'
 # https://devcenter.heroku.com/articles/sqlite3#running-rails-on-postgres
 gem 'pg'
+# https://github.com/ambethia/recaptcha
+gem 'recaptcha', require: 'recaptcha/rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
