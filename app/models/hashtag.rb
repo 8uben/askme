@@ -6,6 +6,8 @@ class Hashtag < ApplicationRecord
 
   validates :text, presence: true, format: {with: HASHTAG_REGEX}
 
+  scope :with_questions, -> { joins(:hashtag_questions).distinct }
+
   before_validation :convert_downcase
 
   private

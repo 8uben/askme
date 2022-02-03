@@ -16,6 +16,8 @@ class Question < ApplicationRecord
   validates :text, presence: true
   validates :text, length: {maximum: 255}
 
+  scope :sorted, -> { order(updated_at: :desc) }
+
   after_save_commit :set_hashtags
 
   private
