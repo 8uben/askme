@@ -7,6 +7,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
+    redirect_to new_user_url, notice: 'Добро пожаловать!' if @users.blank?
     @hashtags = Hashtag.with_questions
   end
 
