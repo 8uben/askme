@@ -6,12 +6,12 @@
     </div>
 
     <div class="question-text text-lead">
-      <%= question.text %>
+      <%= parse_hashtags(question.text) %>
     </div>
 
     <% if question.answer.present? %>
       <div class="question-answer text-lead">
-        <%= question.answer %>
+        <%= parse_hashtags(question.answer) %>
       </div>
     <% end %>
 
