@@ -1,24 +1,46 @@
-# README
+# ASKME
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## About
+This app is Q&A network and clone of [ask.fm](https://ask.fm/)
 
-Things you may want to cover:
+## Version
 
-* Ruby version
+```
+$ rails -v
+> Rails 6.1.4.1
 
-* System dependencies
+$ ruby -v
+> ruby 2.7.3
+```
 
-* Configuration
+## Install
+Run install gems
 
-* Database creation
+```
+$ bundle install
+```
 
-* Database initialization
+Run install nodejs dependent
+```
+$ yarn
+```
 
-* How to run the test suite
+Create database and run database migrations
+```
+$ rails db:create db:migrate
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+For work [reCAPTCHA](https://www.google.com/recaptcha/admin) must write keys in environment variables:
+```
+RECAPTCHA_ASKME_PUBLIC_KEY=<YOUR PUBLIC KEY>
+RECAPTCHA_ASKME_PRIVATE_KEY=<YOUR PRIVATE KEY>
+```
 
-* Deployment instructions
+Start server
+```
+$ rails s
+```
 
-* ...
+## Demo
+
+deploy on [**Heroku**](https://megaask-gp.herokuapp.com)
