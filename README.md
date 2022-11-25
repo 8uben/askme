@@ -22,7 +22,7 @@ $ bundle install
 
 Run install nodejs dependent
 ```
-$ yarn
+$ yarn install
 ```
 
 Create database and run database migrations
@@ -30,10 +30,11 @@ Create database and run database migrations
 $ rails db:create db:migrate
 ```
 
-For work [reCAPTCHA](https://www.google.com/recaptcha/admin) must write keys in environment variables:
+For work [reCAPTCHA](https://www.google.com/recaptcha/admin) must write keys in credentials:
 ```
-RECAPTCHA_ASKME_PUBLIC_KEY=<YOUR PUBLIC KEY>
-RECAPTCHA_ASKME_PRIVATE_KEY=<YOUR PRIVATE KEY>
+recaptcha:
+  public_key: <YOUR PUBLIC KEY>
+  private_key: <YOUR PRIVATE KEY>
 ```
 
 Start server
@@ -43,4 +44,4 @@ $ rails s
 
 ## Demo
 
-deploy on [**Heroku**](https://megaask-gp.herokuapp.com)
+deploy on [**VPS**](https://askme.vladfdv.ru)
