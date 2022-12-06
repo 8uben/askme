@@ -1,3 +1,7 @@
+<% content_for :scripts do %>
+  <%= javascript_pack_tag(:question_form)%>
+<% end %>
+
 <div class="user-header text-center" style="background: <%= @user.bg_color %>">
   <h1 class="title-medium">
     <%# Выводим имя пользователя %>
